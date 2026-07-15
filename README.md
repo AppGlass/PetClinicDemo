@@ -8,10 +8,16 @@ It exists to demonstrate the value of a **AppGlass** for investigating problems 
 Spring Petclinic is a [Spring Boot](https://spring.io/guides/gs/spring-boot) application built using [Gradle](https://spring.io/guides/gs/gradle/).
 Java 17 or later is required for the build, and the application can run with Java 17 or newer.
 
-You can start the application on the command-line as follows:
+You can start the application locally from the command line:
 
 ```bash
 ./gradlew bootRun
+```
+
+Alternatively, you can build the Docker image:
+
+```bash
+./gradlew jibDockerBuild
 ```
 
 You can then access the Petclinic at <http://localhost:8080/>.
