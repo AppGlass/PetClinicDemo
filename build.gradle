@@ -1,0 +1,140 @@
+plugins {
+  id 'java'
+  id 'checkstyle'
+  id 'org.springframework.boot' version '4.0.1'
+  id 'io.spring.dependency-management' version '1.1.7'
+  id 'org.graalvm.buildtools.native' version '0.11.3'
+  id 'org.cyclonedx.bom' version '3.0.2'
+  id 'io.spring.javaformat' version '0.0.47'
+  id "io.spring.nohttp" version "0.0.11"
+  id 'com.google.cloud.tools.jib' version '3.4.3'
+}
+
+gradle.startParameter.excludedTaskNames += [ "checkFormatAot", "checkFormatAotTest" ]
+
+group = 'org.springframework.samples'
+version = '4.0.0-SNAPSHOT'
+
+configurations {
+  agent
+}
+
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(17)
+  }
+}
+
+jib {
+  extraDirectories {
+    paths {
+      path {
+        from = file("${projectDir}/src/main/lib/")     // put agents/live-debugger.jar under this
+        into = '/'
+      }
+    }
+  }
+  from {
+    platforms {
+      platform {
+        architecture = "amd64"
+        os = "linux"
+      }
+      platform {
+        architecture = "arm64"
+        os = "linux"
+      }
+    }
+  }
+}
+
+repositories {
+  mavenCentral()
+}
+
+ext.checkstyleVersion = "12.1.2"
+ext.opentelemetryInstrumentationBomVersion = "2.8.0"
+ext.springJavaformatCheckstyleVersion = "0.0.47"
+ext.webjarsLocatorLiteVersion = "1.1.2"
+ext.webjarsFontawesomeVersion = "4.7.0"
+ext.webjarsBootstrapVersion = "5.3.8"
+
+dependencyManagement {
+  imports {
+    mavenBom "io.opentelemetry.instrumentation:opentelemetry-instrumentation-bom:${opentelemetryInstrumentationBomVersion}"
+  }
+  imports {
+    mavenBom "io.opentelemetry.instrumentation:opentelemetry-instrumentation-bom:${opentelemetryInstrumentationBomVersion}"
+    mavenBom "io.sentry:sentry-bom:8.48.0"
+  }
+}
+
+dependencies {
+  implementation 'org.springframework.boot:spring-boot-starter-opentelemetry'
+  implementation 'org.springframework.boot:spring-boot-starter-cache'
+  implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+  implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+  implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+  implementation 'org.springframework.boot:spring-boot-starter-validation'
+  implementation 'javax.cache:cache-api'
+  implementation 'jakarta.xml.bind:jakarta.xml.bind-api'
+  runtimeOnly 'org.springframework.boot:spring-boot-starter-actuator'
+  runtimeOnly "org.webjars:webjars-locator-lite:${webjarsLocatorLiteVersion}"
+  runtimeOnly "org.webjars.npm:bootstrap:${webjarsBootstrapVersion}"
+  runtimeOnly "org.webjars.npm:font-awesome:${webjarsFontawesomeVersion}"
+  runtimeOnly 'com.github.ben-manes.caffeine:caffeine'
+  runtimeOnly 'com.h2database:h2'
+  runtimeOnly 'com.mysql:mysql-connector-j'
+  runtimeOnly 'org.postgresql:postgresql'
+  developmentOnly 'org.springframework.boot:spring-boot-devtools'
+  testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
+  testImplementation 'org.springframework.boot:spring-boot-starter-restclient-test'
+  testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+  testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+  testImplementation 'org.springframework.boot:spring-boot-docker-compose'
+  testImplementation 'org.testcontainers:testcontainers-junit-jupiter'
+  testImplementation 'org.testcontainers:testcontainers-mysql'
+  checkstyle "io.spring.javaformat:spring-javaformat-checkstyle:${springJavaformatCheckstyleVersion}"
+  checkstyle "com.puppycrawl.tools:checkstyle:${checkstyleVersion}"
+  agent files("dependencies/live-debugger.jar")
+  implementation 'io.sentry:sentry-spring-boot-4-starter'
+  runtimeOnly 'io.sentry:sentry-spotlight'
+}
+
+tasks.named('test') {
+  useJUnitPlatform()
+}
+
+def bootRunTask = tasks.named('bootRun', org.springframework.boot.gradle.tasks.run.BootRun)
+
+tasks.register('runBoot', org.springframework.boot.gradle.tasks.run.BootRun) {
+  group = 'application'
+  description = 'Runs the application with Live Debugger JVM options.'
+  mainClass.set(bootRunTask.flatMap { it.mainClass })
+  classpath = sourceSets.main.runtimeClasspath
+}
+
+checkstyle {
+  configDirectory = project.file('src/checkstyle')
+  configFile = file('src/checkstyle/nohttp-checkstyle.xml')
+}
+
+checkstyleNohttp {
+  configDirectory = project.file('src/checkstyle')
+  configFile = file('src/checkstyle/nohttp-checkstyle.xml')
+}
+
+tasks.named("formatMain").configure { dependsOn("checkstyleMain") }
+tasks.named("formatMain").configure { dependsOn("checkstyleNohttp") }
+
+tasks.named("formatTest").configure { dependsOn("checkstyleTest") }
+tasks.named("formatTest").configure { dependsOn("checkstyleNohttp") }
+
+checkstyleAot.enabled = false
+checkstyleAotTest.enabled = false
+
+checkFormatAot.enabled = false
+checkFormatAotTest.enabled = false
+
+formatAot.enabled = false
+formatAotTest.enabled = false

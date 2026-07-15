@@ -1,0 +1,16 @@
+# Gradle
+.gradle/
+build/
+
+# Maven
+target/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Logs
+*.log
+
+# Compiled artifacts
+*.jar

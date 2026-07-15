@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+
+<html xmlns:th="https://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'home')}">
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="../static/resources/css/petclinic.css" />
+</head>
+
+<body>
+
+  <section class="admin-portal">
+    <div class="admin-header">
+      <div class="admin-title">
+        <p class="admin-kicker">Admin console</p>
+        <h2>PetClinic Admin Panel</h2>
+        <p class="admin-description">
+          A focused workspace for managing owners, appointments, and system health at a glance.
+        </p>
+      </div>
+      <div class="admin-actions">
+        <button type="button" class="admin-btn">Review Queue</button>
+        <button type="button" class="admin-btn admin-btn--outline">Sync Owners</button>
+        <button type="button" class="admin-btn admin-btn--outline" onclick="sendSmsToAll()">Send SMS to All</button>
+        <button type="button" class="admin-btn admin-btn--outline" onclick="processEmails()">Process email DB</button>
+        <button type="button" class="admin-btn admin-btn--light">Export Report</button>
+      </div>
+    </div>
+
+    <div class="admin-tabs" aria-label="Admin sections">
+      <button type="button" class="admin-tab active">Overview</button>
+      <button type="button" class="admin-tab">Owners</button>
+      <button type="button" class="admin-tab">Appointments</button>
+      <button type="button" class="admin-tab">System</button>
+    </div>
+
+  <script>
+    function sendSmsToAll() {
+      fetch('/sms/all', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then(function(response) {
+        if (response.redirected) {
+          window.location.href = response.url;
+        } else {
+          alert('SMS sent successfully!');
+          window.location.reload();
+        }
+      }).catch(function(error) {
+        alert('Error sending SMS: ' + error);
+      });
+    }
+
+    function processEmails() {
+      fetch('/emails/process', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then(function(response) {
+        if (response.redirected) {
+          window.location.href = response.url;
+        } else {
+          alert('Email DB processed successfully!');
+          window.location.reload();
+        }
+      }).catch(function(error) {
+        alert('Error processing email DB: ' + error);
+      });
+    }
+  </script>
+
+</body>
+
+</html>
