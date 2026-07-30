@@ -46,6 +46,15 @@ jib {
       }
     }
   }
+  to {
+    image = 'ghcr.io/appglass/petclinicdemo'
+    tags = [version.toString(), 'latest']
+  }
+  container {
+    labels = [
+      'org.opencontainers.image.source': 'https://github.com/AppGlass/PetClinicDemo'
+    ]
+  }
 }
 
 repositories {
