@@ -249,3 +249,5 @@ With AppGlass evidence, the LLM can confidently choose the root cause instead of
 ## License
 
 The Spring PetClinic sample application is released under version 2.0 of the [Apache License](https://www.apache.org/licenses/LICENSE-2.0).
+
+<!-- Linear <-> GitHub integration test (AG-607); safe to merge or close. -->
