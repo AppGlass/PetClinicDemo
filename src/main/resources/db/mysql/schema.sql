@@ -54,3 +54,12 @@ CREATE TABLE IF NOT EXISTS visits (
   description VARCHAR(255),
   FOREIGN KEY (pet_id) REFERENCES pets(id)
 ) engine=InnoDB;
+
+CREATE TABLE IF NOT EXISTS room_bookings (
+  id           INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  clinic       VARCHAR(30) NOT NULL,
+  room         VARCHAR(30) NOT NULL,
+  booking_date DATE NOT NULL,
+  starts_at    TIME NOT NULL,
+  CONSTRAINT unique_room_slot UNIQUE (clinic, room, booking_date, starts_at)
+) engine=InnoDB;

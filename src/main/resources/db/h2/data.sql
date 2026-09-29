@@ -22,7 +22,7 @@ INSERT INTO types VALUES (default, 'snake');
 INSERT INTO types VALUES (default, 'bird');
 INSERT INTO types VALUES (default, 'hamster');
 
-INSERT INTO owners VALUES (default, 'George', 'Franklin', '110 W. Liberty St.', 'Madison', '608555102', 'george.franklin@email.com');
+INSERT INTO owners VALUES (default, 'George', 'Franklin', '110 W. Liberty St.', 'Madison', '6085551023', 'george.franklin@email.com');
 INSERT INTO owners VALUES (default, 'Betty', 'Davis', '638 Cardinal Ave.', 'Sun Prairie', '6085551749', 'betty.davis@email.com');
 INSERT INTO owners VALUES (default, 'Eduardo', 'Rodriquez', '2693 Commerce St.', 'McFarland', '6085558763', 'eduardo.rodriquez@email.com');
 INSERT INTO owners VALUES (default, 'Harold', 'Davis', '563 Friendly St.', 'Windsor', '6085553198', 'harold.davis@email.com');

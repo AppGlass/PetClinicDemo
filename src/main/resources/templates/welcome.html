@@ -14,63 +14,26 @@
       <div class="admin-title">
         <p class="admin-kicker">Admin console</p>
         <h2>PetClinic Admin Panel</h2>
-        <p class="admin-description">
-          A focused workspace for managing owners, appointments, and system health at a glance.
-        </p>
+        <p class="admin-description" th:text="#{rooms.homeDescription}">Manage pet owners, visits and clinic rooms.</p>
       </div>
       <div class="admin-actions">
-        <button type="button" class="admin-btn">Review Queue</button>
-        <button type="button" class="admin-btn admin-btn--outline">Sync Owners</button>
-        <button type="button" class="admin-btn admin-btn--outline" onclick="sendSmsToAll()">Send SMS to All</button>
-        <button type="button" class="admin-btn admin-btn--outline" onclick="processEmails()">Process email DB</button>
-        <button type="button" class="admin-btn admin-btn--light">Export Report</button>
+        <form method="post" th:action="@{/sms/all}">
+          <button type="submit" class="admin-btn admin-btn--outline">Send SMS to All</button>
+        </form>
+        <form method="post" th:action="@{/emails/process}">
+          <button type="submit" class="admin-btn admin-btn--outline">Process email DB</button>
+        </form>
       </div>
     </div>
 
-    <div class="admin-tabs" aria-label="Admin sections">
-      <button type="button" class="admin-tab active">Overview</button>
-      <button type="button" class="admin-tab">Owners</button>
-      <button type="button" class="admin-tab">Appointments</button>
-      <button type="button" class="admin-tab">System</button>
-    </div>
+    <p th:if="${message}" th:text="${message}" class="alert alert-info" role="status"></p>
 
-  <script>
-    function sendSmsToAll() {
-      fetch('/sms/all', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }).then(function(response) {
-        if (response.redirected) {
-          window.location.href = response.url;
-        } else {
-          alert('SMS sent successfully!');
-          window.location.reload();
-        }
-      }).catch(function(error) {
-        alert('Error sending SMS: ' + error);
-      });
-    }
-
-    function processEmails() {
-      fetch('/emails/process', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }).then(function(response) {
-        if (response.redirected) {
-          window.location.href = response.url;
-        } else {
-          alert('Email DB processed successfully!');
-          window.location.reload();
-        }
-      }).catch(function(error) {
-        alert('Error processing email DB: ' + error);
-      });
-    }
-  </script>
+    <nav class="admin-tabs" aria-label="Admin sections">
+      <a class="admin-tab active" th:href="@{/}" aria-current="page">Overview</a>
+      <a class="admin-tab" th:href="@{/owners/find}" th:text="#{owners}">Owners</a>
+      <a class="admin-tab" th:href="@{/rooms}" th:text="#{rooms}">Rooms</a>
+    </nav>
+  </section>
 
 </body>
 

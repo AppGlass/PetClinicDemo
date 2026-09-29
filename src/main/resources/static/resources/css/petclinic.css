@@ -9632,14 +9632,6 @@ strong {
   background: rgba(15, 123, 108, 0.08);
   box-shadow: none; }
 
-.admin-btn--light {
-  background: rgba(243, 161, 28, 0.18);
-  color: #6b3f00;
-  box-shadow: none; }
-
-.admin-btn--light:hover {
-  background: rgba(243, 161, 28, 0.28); }
-
 .admin-tabs {
   margin-top: 18px;
   display: flex;
@@ -9663,6 +9655,7 @@ strong {
   letter-spacing: 1px;
   font-family: "montserratregular", sans-serif;
   color: var(--ap-muted);
+  text-decoration: none;
   transition: background 0.2s ease, color 0.2s ease; }
 
 .admin-tab.active {

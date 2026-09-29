@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'rooms')}">
+<body>
+  <section aria-labelledby="rooms-title">
+    <h2 id="rooms-title" th:text="#{rooms}">Rooms</h2>
+    <p class="rooms-intro" th:text="#{rooms.intro}">Reserve a room for your next consultation or procedure.</p>
+    <form method="get" th:action="@{/rooms}" class="room-search row g-3 mb-4">
+      <div class="col-sm-6">
+        <label for="clinic" class="form-label" th:text="#{rooms.clinic}">Clinic</label>
+        <select name="clinic" id="clinic" class="form-select">
+          <option th:each="clinic : ${clinics}" th:value="${clinic}"
+                  th:selected="${clinic == availability.clinic}"
+                  th:text="${#strings.capitalize(clinic)}">North</option>
+        </select>
+      </div>
+      <div class="col-sm-6">
+        <label for="date" class="form-label" th:text="#{date}">Date</label>
+        <input type="date" name="date" id="date" class="form-control" th:value="${availability.date}" required />
+      </div>
+      <div class="col-12 room-actions">
+        <button type="submit" class="btn btn-primary">
+          <span class="fa fa-search" aria-hidden="true"></span>
+          <span th:text="#{rooms.search}">Find available rooms</span>
+        </button>
+        <button type="submit" class="btn room-secondary" th:formaction="@{/rooms/schedule}">
+          <span class="fa fa-calendar" aria-hidden="true"></span>
+          <span th:text="#{rooms.schedule}">Clinic schedule</span>
+        </button>
+      </div>
+    </form>
+
+    <div th:if="${bookedSlot}" class="alert alert-success" role="status">
+      <span th:text="#{rooms.booked(${#messages.msg('rooms.room.' + bookedSlot.room.key)},${#strings.capitalize(availability.clinic)},${availability.date},${#temporals.format(bookedSlot.from, 'HH:mm')},${#temporals.format(bookedSlot.through, 'HH:mm')})}">Room booked.</span>
+    </div>
+    <p th:if="${bookingUnavailable}" class="alert alert-warning" role="status"
+       th:text="#{rooms.bookingUnavailable}">That room is no longer available at this time. Please choose another slot.</p>
+
+    <h3 th:text="#{rooms.heading(${#strings.capitalize(availability.clinic)},${availability.date})}">North clinic</h3>
+    <p role="status" th:if="${availability.slots.isEmpty()}" class="alert alert-warning"
+       th:text="#{rooms.unavailable}">No slots available.</p>
+    <div th:unless="${availability.slots.isEmpty()}">
+      <p role="status" th:text="#{rooms.availableCount(${availability.slots.size()})}">Available room slots: 3</p>
+      <ul class="room-slots" th:aria-label="#{rooms.slots}">
+        <li th:each="slot : ${availability.slots}">
+          <form method="post" th:action="@{/rooms/book}">
+            <input type="hidden" name="clinic" th:value="${availability.clinic}" />
+            <input type="hidden" name="date" th:value="${availability.date}" />
+            <input type="hidden" name="room" th:value="${slot.room}" />
+            <input type="hidden" name="time" th:value="${slot.from}" />
+            <button type="submit" class="room-slot" th:attr="data-room=${slot.room},data-time=${slot.from}">
+              <span class="room-slot-time" th:text="${#temporals.format(slot.from, 'HH:mm') + '–' + #temporals.format(slot.through, 'HH:mm')}">09:00–10:00</span>
+              <span class="room-slot-details">
+                <strong th:text="${#messages.msg('rooms.room.' + slot.room.key)}">Room 1 · Examination</strong>
+                <span th:text="${#strings.capitalize(availability.clinic)}">North</span>
+              </span>
+              <span class="room-slot-action">
+                <span th:text="#{rooms.book}">Book room</span>
+                <span class="fa fa-arrow-right" aria-hidden="true"></span>
+              </span>
+            </button>
+          </form>
+        </li>
+      </ul>
+    </div>
+  </section>
+</body>
+</html>

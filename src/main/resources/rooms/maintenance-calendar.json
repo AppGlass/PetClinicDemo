@@ -1,0 +1,50 @@
+[
+  {
+    "clinic": "centre",
+    "from": "2026-10-05",
+    "through": "2026-10-07",
+    "state": "MAINTENANCE",
+    "rooms": [
+      "EXAMINATION",
+      "SURGERY"
+    ]
+  },
+  {
+    "clinic": "north",
+    "from": "2026-09-01",
+    "through": "2026-10-31",
+    "state": "MAINTENANCE",
+    "rooms": [
+      "SURGERY"
+    ]
+  },
+  {
+    "clinic": "centre",
+    "from": "2026-09-01",
+    "through": "2026-10-31",
+    "state": "MAINTENANCE",
+    "rooms": [
+      "SURGERY"
+    ]
+  },
+  {
+    "clinic": "north",
+    "from": "2019-06-01",
+    "through": "2019-07-31",
+    "state": "CLOSED",
+    "rooms": [
+      "EXAMINATION",
+      "SURGERY"
+    ]
+  },
+  {
+    "clinic": "north",
+    "from": "2099-06-01",
+    "through": "2099-06-03",
+    "state": "CLOSED",
+    "rooms": [
+      "EXAMINATION",
+      "SURGERY"
+    ]
+  }
+]

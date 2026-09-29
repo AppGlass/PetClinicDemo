@@ -12,6 +12,7 @@
   <title th:text="#{layoutTitle}">PetClinic :: a Spring Framework demonstration</title>
   <link th:href="@{/webjars/font-awesome/css/font-awesome.min.css}" rel="stylesheet">
   <link rel="stylesheet" th:href="@{/resources/css/petclinic.css}" />
+  <link rel="stylesheet" th:if="${menu == 'rooms'}" th:href="@{/resources/css/rooms.css}" />
 
 </head>
 
@@ -29,7 +30,7 @@
 
           <li th:fragment="menuItem (link,active,title,glyph,text)" th:class="nav-item">
             <a th:class="${active==menu ? 'nav-link active' : 'nav-link'}" th:href="@{__${link}__}" th:title="${title}">
-              <span th:class="'fa fa-'+${glyph}" class="fa fa-home"></span>
+              <span th:class="'fa fa-'+${glyph}" class="fa fa-home" aria-hidden="true"></span>
               <span th:text="${text}">Template</span>
             </a>
           </li>
@@ -48,6 +49,11 @@
             <span th:text="#{findOwners}">Find owners</span>
           </li>
 
+          <li th:replace="~{::menuItem ('/rooms','rooms',#{rooms.find},'calendar',#{rooms})}">
+            <span class="fa fa-calendar" aria-hidden="true"></span>
+            <span th:text="#{rooms}">Rooms</span>
+          </li>
+
           <li th:replace="~{::menuItem ('/vets.html','vets','veterinarians','th-list',#{vets})}">
             <span class="fa fa-th-list" aria-hidden="true"></span>
             <span th:text="#{vets}">Veterinarians</span>
@@ -64,7 +70,7 @@
     </div>
   </nav>
   <div class="container-fluid">
-    <div class="container xd-container">
+    <div class="container xd-container" th:classappend="${menu == 'rooms'} ? 'rooms-container'">
 
       <th:block th:insert="${template}" />
 

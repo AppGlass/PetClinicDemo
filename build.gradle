@@ -123,6 +123,21 @@ tasks.register('runBoot', org.springframework.boot.gradle.tasks.run.BootRun) {
   classpath = sourceSets.main.runtimeClasspath
 }
 
+def gameJavaLauncher = javaToolchains.launcherFor(java.toolchain)
+def gameJar = tasks.named('bootJar', org.springframework.boot.gradle.tasks.bundling.BootJar)
+
+tasks.register('prepareGame') {
+  group = 'application'
+  description = 'Builds the game and records its Java 17 runtime and application jar.'
+  dependsOn(gameJar)
+  doLast {
+    def launchDirectory = layout.buildDirectory.dir('game').get().asFile
+    launchDirectory.mkdirs()
+    new File(launchDirectory, 'java').text = gameJavaLauncher.get().executablePath.asFile.absolutePath + '\n'
+    new File(launchDirectory, 'jar').text = gameJar.get().archiveFile.get().asFile.absolutePath + '\n'
+  }
+}
+
 checkstyle {
   configDirectory = project.file('src/checkstyle')
   configFile = file('src/checkstyle/nohttp-checkstyle.xml')

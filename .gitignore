@@ -15,3 +15,10 @@ target/
 # Compiled artifacts
 *.jar
 !gradle/wrapper/gradle-wrapper.jar
+
+# Local operational data and submitted incident repairs
+/runtime/
+/appointments.json
+/appointements.json
+/repair.json
+__pycache__/

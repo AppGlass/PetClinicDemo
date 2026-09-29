@@ -15,6 +15,8 @@
  */
 package org.springframework.samples.petclinic.owner;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Map;
 import java.util.Optional;
 
@@ -107,9 +109,18 @@ class VisitController {
 		logger.info("Visit saved: " + visit);
 
 		Pet pet = owner.getPet(petId);
+		logger.info("Average visits per year for " + pet.getName() + ": " + averageVisitsPerYear(pet));
 		emailService.sendEmailOld(owner, pet, redirectAttributes);
 
 		return "redirect:/owners/{ownerId}";
+	}
+
+	/**
+	 * The pet's average visits per year, over its whole life.
+	 */
+	private int averageVisitsPerYear(Pet pet) {
+		int ageInYears = Period.between(pet.getBirthDate(), LocalDate.now()).getYears();
+		return pet.getVisits().size() / ageInYears;
 	}
 
 }
