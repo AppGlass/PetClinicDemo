@@ -19,7 +19,7 @@ spec:
         - name: petclinic
           # Image pushed to GHCR by `./gradlew jib`.
           # Keep the tag in sync with `version` in build.gradle.
-          image: ghcr.io/appglass/petclinicdemo:4.0.0-AppGlass
+          image: ghcr.io/appglass/petclinicdemo:4.0.2
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
