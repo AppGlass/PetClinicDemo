@@ -1,0 +1,57 @@
+[
+  {
+    "key": "calendar-centre-any-2026-10-05",
+    "clinic": "centre",
+    "service": "ANY",
+    "action": "BLOCKED",
+    "priority": 900,
+    "validFrom": "2026-10-05",
+    "validThrough": "2026-10-07",
+    "source": "clinic-calendar",
+    "reason": "Published room closure"
+  },
+  {
+    "key": "calendar-north-surgery-2026-09-01",
+    "clinic": "north",
+    "service": "SURGERY",
+    "action": "BLOCKED",
+    "priority": 900,
+    "validFrom": "2026-09-01",
+    "validThrough": "2026-10-31",
+    "source": "clinic-calendar",
+    "reason": "Published room closure"
+  },
+  {
+    "key": "calendar-centre-surgery-2026-09-01",
+    "clinic": "centre",
+    "service": "SURGERY",
+    "action": "BLOCKED",
+    "priority": 900,
+    "validFrom": "2026-09-01",
+    "validThrough": "2026-10-31",
+    "source": "clinic-calendar",
+    "reason": "Published room closure"
+  },
+  {
+    "key": "calendar-north-any-2019-06-01",
+    "clinic": "north",
+    "service": "ANY",
+    "action": "BLOCKED",
+    "priority": 900,
+    "validFrom": "2019-06-01",
+    "validThrough": "2019-07-31",
+    "source": "clinic-calendar",
+    "reason": "Published room closure"
+  },
+  {
+    "key": "calendar-north-any-2099-06-01",
+    "clinic": "north",
+    "service": "ANY",
+    "action": "BLOCKED",
+    "priority": 900,
+    "validFrom": "2099-06-01",
+    "validThrough": "2099-06-03",
+    "source": "clinic-calendar",
+    "reason": "Published room closure"
+  }
+]

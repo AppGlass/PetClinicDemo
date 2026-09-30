@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'rooms')}">
+<body>
+  <section class="clinic-schedule" aria-labelledby="schedule-title">
+    <div class="schedule-heading">
+      <div>
+        <h2 id="schedule-title" th:text="#{rooms.schedule}">Clinic schedule</h2>
+        <p th:text="#{rooms.schedule.intro}">Rooms, bookings and free slots across all clinics.</p>
+      </div>
+      <div class="schedule-hours">
+        <span class="fa fa-clock-o" aria-hidden="true"></span>
+        <span th:text="#{rooms.schedule.hours(${openingTime},${closingTime})}">Working hours · 08:00–17:00</span>
+      </div>
+    </div>
+
+    <form method="get" th:action="@{/rooms/schedule}" class="schedule-toolbar room-actions">
+      <input type="hidden" name="clinic" th:value="${clinic}" />
+      <div class="schedule-date">
+        <label for="date" th:text="#{date}">Date</label>
+        <input type="date" name="date" id="date" class="form-control" th:value="${date}" required />
+        <button type="submit" class="btn btn-primary" th:text="#{rooms.schedule.view}">View schedule</button>
+      </div>
+      <button type="submit" class="btn room-secondary" th:formaction="@{/rooms}">
+        <span class="fa fa-search" aria-hidden="true"></span>
+        <span th:text="#{rooms.search}">Find available rooms</span>
+      </button>
+    </form>
+
+    <ul class="schedule-legend" th:aria-label="#{rooms.schedule.legend}">
+      <li><span class="schedule-swatch slot-free" aria-hidden="true"></span><span th:text="#{rooms.schedule.free}">Free</span></li>
+      <li><span class="schedule-swatch slot-booked" aria-hidden="true"></span><span th:text="#{rooms.schedule.booked}">Booked</span></li>
+      <li><span class="schedule-swatch slot-maintenance" aria-hidden="true"></span><span th:text="#{rooms.schedule.maintenance}">Maintenance</span></li>
+      <li><span class="schedule-swatch slot-closed" aria-hidden="true"></span><span th:text="#{rooms.schedule.closed}">Closed</span></li>
+    </ul>
+
+    <div class="schedule-scroll" role="region" tabindex="0" aria-labelledby="schedule-title">
+      <table class="schedule-grid" th:aria-label="#{rooms.schedule}">
+        <caption class="visually-hidden" th:text="#{rooms.schedule.caption(${date})}">Room schedule for the selected day</caption>
+        <colgroup><col class="schedule-time-column" /></colgroup>
+        <colgroup th:each="option : ${clinics}" span="2"></colgroup>
+        <thead>
+          <tr class="schedule-clinics">
+            <th rowspan="2" scope="col" class="schedule-time" th:text="#{rooms.schedule.time}">Time</th>
+            <th th:each="option : ${clinics}" colspan="2" scope="colgroup" th:id="${'clinic-' + option}"
+                th:text="${#strings.capitalize(option)}">North</th>
+          </tr>
+          <tr class="schedule-rooms">
+            <th:block th:each="option : ${clinics}">
+              <th th:each="room : ${rooms}" scope="col" th:id="${option + '-' + room.name()}"
+                  th:text="${#messages.msg('rooms.room.' + room.key)}">Room 1 · Examination</th>
+            </th:block>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="hour, row : ${hours}" th:classappend="${!hour.workingHours} ? 'schedule-after-hours'"
+              th:attr="data-time=${hour.from}">
+            <th scope="row" class="schedule-time" th:id="${'hour-' + row.index}">
+              <span th:text="${hour.from}">08:00</span>
+              <small th:text="${'– ' + hour.through}">– 09:00</small>
+            </th>
+            <td th:each="slot : ${hour.slots}" th:class="${'slot-' + slot.state.key}"
+                th:attr="data-clinic=${slot.clinic},data-room=${slot.room.name()},headers=${'hour-' + row.index + ' clinic-' + slot.clinic + ' ' + slot.clinic + '-' + slot.room.name()}">
+              <span class="schedule-slot-label" th:text="${#messages.msg('rooms.schedule.' + slot.state.key)}">Free</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</body>
+</html>
