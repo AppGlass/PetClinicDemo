@@ -27,16 +27,25 @@ class RoomBookingService {
 		this.bookings = bookings;
 	}
 
+	/**
+	 * The slots offered online: those the schedule shows free, in the rooms the booking
+	 * rules allow that day.
+	 */
 	List<ClinicSchedule.AvailableSlot> available(String clinic, LocalDate day) {
+		List<ClinicSchedule.AvailableSlot> free = this.schedule.available(clinic, day);
 		List<Room> bookable = Arrays.stream(Room.values())
 			.filter(room -> this.rules.allowBooking(clinic, room, day))
 			.toList();
-		return this.schedule.available(clinic, day).stream().filter(slot -> bookable.contains(slot.room())).toList();
+		List<ClinicSchedule.AvailableSlot> offered = free.stream()
+			.filter(slot -> bookable.contains(slot.room()))
+			.toList();
+		return offered;
 	}
 
 	boolean book(String clinic, Room room, LocalDate day, LocalTime start) {
-		if (!this.rules.allowBooking(clinic, room, day)
-				|| !this.schedule.available(clinic, day).contains(new ClinicSchedule.AvailableSlot(room, start))) {
+		boolean allowed = this.rules.allowBooking(clinic, room, day);
+		boolean free = this.schedule.available(clinic, day).contains(new ClinicSchedule.AvailableSlot(room, start));
+		if (!allowed || !free) {
 			return false;
 		}
 		try {

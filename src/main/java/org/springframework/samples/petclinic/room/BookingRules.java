@@ -42,12 +42,11 @@ class BookingRules {
 	 * rule, the room may be booked.
 	 */
 	BookingRule.Action actionFor(String clinic, Room room, LocalDate day) {
-		for (BookingRule rule : this.rules) {
-			if (rule.covers(clinic, room, day)) {
-				return rule.action();
-			}
-		}
-		return BookingRule.Action.AVAILABLE;
+		BookingRule decisive = this.rules.stream()
+			.filter(rule -> rule.covers(clinic, room, day))
+			.findFirst()
+			.orElse(null);
+		return decisive == null ? BookingRule.Action.AVAILABLE : decisive.action();
 	}
 
 	boolean allowBooking(String clinic, Room room, LocalDate day) {
