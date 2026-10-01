@@ -13,7 +13,7 @@ plugins {
 gradle.startParameter.excludedTaskNames += [ "checkFormatAot", "checkFormatAotTest" ]
 
 group = 'org.springframework.samples'
-version = '4.0.2'
+version = '4.0.3'
 
 configurations {
   agent
